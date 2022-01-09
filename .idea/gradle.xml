@@ -11,6 +11,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/aop-part02-chapter02" />
+            <option value="$PROJECT_DIR$/aop_part02_chapter03" />
             <option value="$PROJECT_DIR$/app" />
           </set>
         </option>

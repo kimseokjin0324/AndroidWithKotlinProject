@@ -10,3 +10,4 @@ rootProject.name = "AndroidWithKotlinProject"
 include ':app'
 include ':aop-part02-chapter02'
 include ':aop_part02_chapter03'
+include ':aop_part2_chapter4'

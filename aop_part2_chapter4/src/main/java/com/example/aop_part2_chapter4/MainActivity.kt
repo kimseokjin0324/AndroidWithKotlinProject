@@ -8,6 +8,7 @@ import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isVisible
 import java.lang.NumberFormatException
 import kotlin.math.exp
 
@@ -21,8 +22,18 @@ class MainActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.resultTextView)
     }
 
+    private val historyLayout : View by lazy{
+        findViewById<View>(R.id.historyLayout)
+    }
+
+    private val historyLinearLayout : View by lazy{
+        findViewById<View>(R.id.historyLinearLayout)
+    }
+
     private var isOperator = false
     private var hasOperator = false
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -172,6 +183,20 @@ class MainActivity : AppCompatActivity() {
 
     fun historyButtonClicked(v: View) {
 
+        historyLayout.isVisible = true
+
+        //TODO 디비에서 모든 기록 가져오기
+        //TODO 뷰에 모든 기록 가져오기
+    }
+
+    fun closeHistoryButtonClicked(v: View){
+        //TODO historyLayout visibiltiy->gone
+        historyLayout.isVisible = false
+    }
+
+    fun historyClearButtonClicked(v: View){
+        // TODO DB에서 모든 기록 삭제
+        // TODO 뷰에서 모든 기록 삭제
     }
 }
 

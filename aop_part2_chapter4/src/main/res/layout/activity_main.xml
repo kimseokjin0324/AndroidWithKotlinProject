@@ -318,4 +318,63 @@
         </TableRow>
 
     </TableLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/historyLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/keypadTableLayout">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/closeButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@null"
+            android:layout_width="0dp"
+            android:onClick="closeHistoryButtonClicked"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="닫기"
+            android:textColor="@color/black"
+            android:stateListAnimator="@null"/>
+        <ScrollView
+            app:layout_constraintTop_toBottomOf="@id/closeButton"
+            android:layout_width="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/historyClearButton"
+            android:layout_margin="10dp"
+            android:layout_height="0dp">
+            <LinearLayout
+                android:id="@+id/historyLinearLayout"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="wrap_content"/>
+        </ScrollView>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/historyClearButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="38dp"
+            android:layout_marginStart="47dp"
+            android:layout_marginEnd="47dp"
+            android:text="계산기록 삭제"
+            android:onClick="historyClearButtonClicked"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:background="@drawable/button_background_green"
+            android:stateListAnimator="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

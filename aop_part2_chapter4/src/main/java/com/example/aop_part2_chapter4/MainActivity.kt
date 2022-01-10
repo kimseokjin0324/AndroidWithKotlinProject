@@ -5,10 +5,14 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.room.Room
+import com.example.aop_part2_chapter4.model.History
 import java.lang.NumberFormatException
 import kotlin.math.exp
 
@@ -22,13 +26,16 @@ class MainActivity : AppCompatActivity() {
         findViewById<TextView>(R.id.resultTextView)
     }
 
-    private val historyLayout : View by lazy{
+    private val historyLayout: View by lazy {
         findViewById<View>(R.id.historyLayout)
     }
 
-    private val historyLinearLayout : View by lazy{
-        findViewById<View>(R.id.historyLinearLayout)
+    private val historyLinearLayout: LinearLayout by lazy {
+        findViewById<LinearLayout>(R.id.historyLinearLayout)
     }
+
+
+    lateinit var db: AppDatabase
 
     private var isOperator = false
     private var hasOperator = false
@@ -37,6 +44,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        db = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java,
+            "historyDB"
+        ).build()
     }
 
     //-인자를 view를 받는 함수 구현
@@ -142,6 +155,11 @@ class MainActivity : AppCompatActivity() {
         val expressionText = expressionTextView.text.toString()
         val resultText = calculateExpression()
 
+        // todo DB에 넣어주는 부분
+        //- db에 저장할때는 main스레드가 아닌 새로운 스레드에서 진행해야한다.
+        Thread(Runnable {
+            db.historyDao().insertHistory(History(null,expressionText,resultText))
+        }).start()
         resultTextView.text = ""
         expressionTextView.text = resultText
 
@@ -184,20 +202,41 @@ class MainActivity : AppCompatActivity() {
     fun historyButtonClicked(v: View) {
 
         historyLayout.isVisible = true
-
+        historyLinearLayout.removeAllViews()    //-리니어레이아웃 하위의 뷰들이 삭제가됨
         //TODO 디비에서 모든 기록 가져오기
-        //TODO 뷰에 모든 기록 가져오기
+        //TODO 뷰에 모든 기록 할당하기
+        Thread(Runnable {
+            db.historyDao().getAll().reversed().forEach{
+
+                runOnUiThread{
+                    //- historyView 를 LayoutInfalter를 통해생성
+                    val historyView = LayoutInflater.from(this).inflate(R.layout.history_row,null,false)
+                    historyView.findViewById<TextView>(R.id.expressionTextView).text = it.expression
+                    historyView.findViewById<TextView>(R.id.resultTextView).text = "= ${it.result}"
+
+                    historyLinearLayout.addView(historyView)
+                }
+
+            }
+        }).start()
+
+
     }
 
-    fun closeHistoryButtonClicked(v: View){
+    fun closeHistoryButtonClicked(v: View) {
         //TODO historyLayout visibiltiy->gone
         historyLayout.isVisible = false
     }
 
-    fun historyClearButtonClicked(v: View){
-        // TODO DB에서 모든 기록 삭제
+    fun historyClearButtonClicked(v: View) {
         // TODO 뷰에서 모든 기록 삭제
+        historyLinearLayout.removeAllViews()
+        // TODO DB에서 모든 기록 삭제
+        Thread(Runnable {
+            db.historyDao().deleteALL()
+        }).start()
     }
+
 }
 
 // 확장함수
